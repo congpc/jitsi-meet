@@ -12,13 +12,10 @@ export default [
     '_peerConnStatusRtcMuteTimeout',
     'abTesting',
     'analytics.disabled',
+    'audioLevelsInterval',
     'autoRecord',
     'autoRecordToken',
     'avgRtpStatsN',
-    'callFlowsEnabled',
-    'callStatsConfIDNamespace',
-    'callStatsID',
-    'callStatsSecret',
 
     /**
      * The display name of the CallKit call representing the conference/meeting
@@ -34,6 +31,7 @@ export default [
      * @type string
      */
     'callDisplayName',
+    'callFlowsEnabled',
 
     /**
      * The handle
@@ -48,6 +46,9 @@ export default [
      * @type string
      */
     'callHandle',
+    'callStatsConfIDNamespace',
+    'callStatsID',
+    'callStatsSecret',
 
     /**
      * The UUID of the CallKit call representing the conference/meeting
@@ -73,8 +74,8 @@ export default [
     'desktopSharingChromeExtId',
     'desktopSharingChromeMinExtVersion',
     'desktopSharingChromeSources',
-    'desktopSharingFrameRate',
     'desktopSharingFirefoxDisabled',
+    'desktopSharingFrameRate',
     'desktopSharingSources',
     'disable1On1Mode',
     'disableAEC',
@@ -84,6 +85,7 @@ export default [
     'disableDeepLinking',
     'disableH264',
     'disableHPF',
+    'disableLocalVideoFlip',
     'disableNS',
     'disableRemoteControl',
     'disableRtx',
@@ -91,15 +93,18 @@ export default [
     'displayJids',
     'e2eping',
     'enableDisplayNameInStats',
+    'enableEmailInStats',
     'enableLayerSuspension',
     'enableLipSync',
-    'disableLocalVideoFlip',
     'enableRemb',
-    'enableStatsID',
+    'enableScreenshotCapture',
     'enableTalkWhileMuted',
+    'enableNoAudioDetection',
+    'enableNoisyMicDetection',
     'enableTcc',
     'etherpad_base',
     'failICE',
+    'feedbackPercentage',
     'fileRecordingsEnabled',
     'firefox_fake_device',
     'forceJVB121Ratio',
@@ -117,16 +122,19 @@ export default [
     'nick',
     'openBridgeChannel',
     'p2p',
+    'pcStatsInterval',
     'preferH264',
     'requireDisplayName',
     'resolution',
     'startAudioMuted',
     'startAudioOnly',
     'startBitrate',
-    'startSilent',
     'startScreenSharing',
+    'startSilent',
     'startVideoMuted',
+    'startWithAudioMuted',
     'startWithVideoMuted',
+    'stereo',
     'subject',
     'testing',
     'useIPv6',

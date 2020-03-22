@@ -30,6 +30,7 @@ Its constructor gets a number of options:
     * **onload**: (optional) handler for the iframe onload event.
     * **invitees**: (optional) Array of objects containing information about new participants that will be invited in the call.
     * **devices**: (optional) A map containing information about the initial devices that will be used in the call.
+    * **userInfo**: (optional) JS object containing information about the participant opening the meeting, such as `email`.
 
 Example:
 
@@ -83,6 +84,19 @@ const options = {
 };
 const api = new JitsiMeetExternalAPI(domain, options);
  ```
+
+You can set the userInfo(email) for the call:
+
+```javascript
+var domain = "meet.jit.si";
+var options = {
+    ...
+    userInfo: {
+        email: 'email@jitsiexamplemail.com'
+    }
+}
+var api = new JitsiMeetExternalAPI(domain, options);
+```
 
 ### Controlling the embedded Jitsi Meet Conference
 
@@ -256,6 +270,11 @@ api.executeCommand('email', 'example@example.com');
 api.executeCommand('avatarUrl', 'https://avatars0.githubusercontent.com/u/3671647');
 ```
 
+* **sendEndpointTextMessage** - Sends a text message to another participant through the datachannels.
+```javascript
+api.executeCommand('receiverParticipantId', 'text');
+```
+
 You can also execute multiple commands using the `executeCommands` method:
 ```javascript
 api.executeCommands(commands);
@@ -306,6 +325,21 @@ changes. The listener will receive an object with the following structure:
 ```javascript
 {
     muted: boolean // new muted status - boolean
+}
+```
+
+* **endpointTextMessageReceived** - event notifications about a text message received through datachannels.
+The listener will receive an object with the following structure:
+```javascript
+{
+    senderInfo: {
+        jid: string, // the jid of the sender
+        id: string // the participant id of the sender
+    },
+    eventData: {
+        name: string // the name of the datachannel event: `endpoint-text-message`
+        text: string // the received text from the sender
+    }
 }
 ```
 

@@ -1,9 +1,17 @@
 local get_room_from_jid = module:require "util".get_room_from_jid;
+local room_jid_match_rewrite = module:require "util".room_jid_match_rewrite;
 local jid_resource = require "util.jid".resource;
 local ext_events = module:require "ext_events"
 local st = require "util.stanza";
 local socket = require "socket";
 local json = require "util.json";
+
+-- we use async to detect Prosody 0.10 and earlier
+local have_async = pcall(require, "util.async");
+if not have_async then
+    module:log("warn", "speaker stats will not work with Prosody version 0.10 or less.");
+    return;
+end
 
 local muc_component_host = module:get_option_string("muc_component");
 if muc_component_host == nil then
@@ -25,7 +33,7 @@ function on_message(event)
         = event.stanza:get_child('speakerstats', 'http://jitsi.org/jitmeet');
     if speakerStats then
         local roomAddress = speakerStats.attr.room;
-        local room = get_room_from_jid(roomAddress);
+        local room = get_room_from_jid(room_jid_match_rewrite(roomAddress));
 
         if not room then
             log("warn", "No room found %s", roomAddress);
@@ -45,7 +53,10 @@ function on_message(event)
         local oldDominantSpeakerId = roomSpeakerStats['dominantSpeakerId'];
 
         if oldDominantSpeakerId then
-            roomSpeakerStats[oldDominantSpeakerId]:setDominantSpeaker(false);
+            local oldDominantSpeaker = roomSpeakerStats[oldDominantSpeakerId];
+            if oldDominantSpeaker then
+                oldDominantSpeaker:setDominantSpeaker(false);
+            end
         end
 
         if newDominantSpeaker then

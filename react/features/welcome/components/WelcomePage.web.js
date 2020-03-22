@@ -3,8 +3,9 @@
 import React from 'react';
 
 import { translate } from '../../base/i18n';
-import { Platform, Watermarks } from '../../base/react';
+import { Watermarks } from '../../base/react';
 import { connect } from '../../base/redux';
+import { isMobileBrowser } from '../../base/environment/utils';
 import { CalendarList } from '../../calendar-sync';
 import { RecentList } from '../../recent-list';
 import { SettingsButton, SETTINGS_TABS } from '../../settings';
@@ -17,6 +18,12 @@ import Tabs from './Tabs';
  * @type {string}
  */
 export const ROOM_NAME_VALIDATE_PATTERN_STR = '^[^?&:\u0022\u0027%#]+$';
+
+/**
+ * Maximum number of pixels corresponding to a mobile layout.
+ * @type {number}
+ */
+const WINDOW_WIDTH_THRESHOLD = 425;
 
 /**
  * The Web container rendering the welcome page.
@@ -110,6 +117,8 @@ class WelcomePage extends AbstractWelcomePage {
      * @returns {void}
      */
     componentDidMount() {
+        super.componentDidMount();
+
         document.body.classList.add('welcome-page');
         document.title = interfaceConfig.APP_NAME;
 
@@ -152,6 +161,7 @@ class WelcomePage extends AbstractWelcomePage {
         const { APP_NAME } = interfaceConfig;
         const showAdditionalContent = this._shouldShowAdditionalContent();
         const showAdditionalToolbarContent = this._shouldShowAdditionalToolbarContent();
+        const showResponsiveText = this._shouldShowResponsiveText();
 
         return (
             <div
@@ -205,7 +215,11 @@ class WelcomePage extends AbstractWelcomePage {
                             className = 'welcome-page-button'
                             id = 'enter_room_button'
                             onClick = { this._onFormSubmit }>
-                            { t('welcomepage.go') }
+                            {
+                                showResponsiveText
+                                    ? t('welcomepage.goSmall')
+                                    : t('welcomepage.go')
+                            }
                         </div>
                     </div>
                     { this._renderTabs() }
@@ -267,10 +281,7 @@ class WelcomePage extends AbstractWelcomePage {
      * @returns {ReactElement|null}
      */
     _renderTabs() {
-        const isMobileBrowser
-            = Platform.OS === 'android' || Platform.OS === 'ios';
-
-        if (isMobileBrowser) {
+        if (isMobileBrowser()) {
             return null;
         }
 
@@ -362,6 +373,20 @@ class WelcomePage extends AbstractWelcomePage {
             && this._additionalToolbarContentTemplate.content
             && this._additionalToolbarContentTemplate.innerHTML.trim();
     }
+
+    /**
+     * Returns whether or not the screen has a size smaller than a custom margin
+     * and therefore display different text in the go button.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _shouldShowResponsiveText() {
+        const { innerWidth } = window;
+
+        return innerWidth <= WINDOW_WIDTH_THRESHOLD;
+    }
+
 }
 
 export default translate(connect(_mapStateToProps)(WelcomePage));

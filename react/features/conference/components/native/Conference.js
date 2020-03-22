@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { NativeModules, SafeAreaView, StatusBar, View } from 'react-native';
+import { NativeModules, SafeAreaView, StatusBar } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { appNavigate } from '../../../app';
@@ -34,6 +34,7 @@ import {
     abstractMapStateToProps
 } from '../AbstractConference';
 import Labels from './Labels';
+import LonelyMeetingExperience from './LonelyMeetingExperience';
 import NavigationBar from './NavigationBar';
 import styles, { NAVBAR_GRADIENT_COLORS } from './styles';
 
@@ -279,7 +280,7 @@ class Conference extends AbstractConference<Props, *> {
                         </TintedView>
                 }
 
-                <View
+                <SafeAreaView
                     pointerEvents = 'box-none'
                     style = { styles.toolboxAndFilmstripContainer }>
 
@@ -305,6 +306,8 @@ class Conference extends AbstractConference<Props, *> {
 
                     { _shouldDisplayTileView || <DisplayNameLabel participantId = { _largeVideoParticipantId } /> }
 
+                    <LonelyMeetingExperience />
+
                     {/*
                       * The Toolbox is in a stacking layer below the Filmstrip.
                       */}
@@ -320,7 +323,7 @@ class Conference extends AbstractConference<Props, *> {
                       */
                         _shouldDisplayTileView ? undefined : <Filmstrip />
                     }
-                </View>
+                </SafeAreaView>
 
                 <SafeAreaView
                     pointerEvents = 'box-none'

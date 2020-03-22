@@ -32,6 +32,7 @@ const commands = {
     email: 'email',
     hangup: 'video-hangup',
     password: 'password',
+    sendEndpointTextMessage: 'send-endpoint-text-message',
     sendTones: 'send-tones',
     subject: 'subject',
     submitFeedback: 'submit-feedback',
@@ -55,6 +56,7 @@ const events = {
     'device-list-changed': 'deviceListChanged',
     'display-name-change': 'displayNameChange',
     'email-change': 'emailChange',
+    'endpoint-text-message-received': 'endpointTextMessageReceived',
     'feedback-submitted': 'feedbackSubmitted',
     'feedback-prompt-displayed': 'feedbackPromptDisplayed',
     'filmstrip-display-changed': 'filmstripDisplayChanged',
@@ -232,6 +234,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      * information about new participants that will be invited in the call.
      * @param {Array<Object>} [options.devices] - Array of objects containing
      * information about the initial devices that will be used in the call.
+     * @param {Object} [options.userInfo] - Object containing information about
+     * the participant opening the meeting.
      */
     constructor(domain, ...args) {
         super();
@@ -246,7 +250,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             jwt = undefined,
             onload = undefined,
             invitees,
-            devices
+            devices,
+            userInfo
         } = parseArguments(args);
 
         this._parentNode = parentNode;
@@ -256,7 +261,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             jwt,
             noSSL,
             roomName,
-            devices
+            devices,
+            userInfo
         });
         this._createIFrame(height, width, onload);
         this._transport = new Transport({
@@ -296,7 +302,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
         const frameName = `jitsiConferenceFrame${id}`;
 
         this._frame = document.createElement('iframe');
-        this._frame.allow = 'camera; microphone';
+        this._frame.allow = 'camera; microphone; display-capture';
         this._frame.src = this._url;
         this._frame.name = frameName;
         this._frame.id = frameName;
